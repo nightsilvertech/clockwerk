@@ -3,6 +3,7 @@ package endpoints
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
+	"gitlab.com/nbdgocean6/clockwerk/middleware"
 	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
 	_interface "gitlab.com/nbdgocean6/clockwerk/service/interface"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -13,6 +14,7 @@ type ClockwerkEndpoint struct {
 	AddSchedulerEndpoint    endpoint.Endpoint
 	DeleteSchedulerEndpoint endpoint.Endpoint
 	ToggleSchedulerEndpoint endpoint.Endpoint
+	BackupEndpoint          endpoint.Endpoint
 }
 
 func makeGetSchedulersEndpoint(usecase _interface.Clockwerk) endpoint.Endpoint {
@@ -75,11 +77,57 @@ func (e ClockwerkEndpoint) ToggleScheduler(ctx context.Context, request *pb.Sele
 	return res.(*emptypb.Empty), nil
 }
 
+func makeBackupEndpoint(usecase _interface.Clockwerk) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		res, err := usecase.Backup(ctx, request.(*emptypb.Empty))
+		return res, err
+	}
+}
+
+func (e ClockwerkEndpoint) Backup(ctx context.Context, request *emptypb.Empty) (*emptypb.Empty, error) {
+	res, err := e.BackupEndpoint(ctx, request)
+	if err != nil {
+		return &emptypb.Empty{}, err
+	}
+	return res.(*emptypb.Empty), nil
+}
+
 func NewClockwerkEndpoint(usecase _interface.Clockwerk) ClockwerkEndpoint {
+	var getSchedulersEp endpoint.Endpoint
+	{
+		getSchedulersEp = makeGetSchedulersEndpoint(usecase)
+		getSchedulersEp = middleware.BasicAuthMiddleware()(getSchedulersEp)
+	}
+
+	var addSchedulerEp endpoint.Endpoint
+	{
+		addSchedulerEp = makeAddSchedulerEndpoint(usecase)
+		addSchedulerEp = middleware.BasicAuthMiddleware()(addSchedulerEp)
+	}
+
+	var deleteSchedulerEp endpoint.Endpoint
+	{
+		deleteSchedulerEp = makeDeleteSchedulerEndpoint(usecase)
+		deleteSchedulerEp = middleware.BasicAuthMiddleware()(deleteSchedulerEp)
+	}
+
+	var toggleSchedulerEp endpoint.Endpoint
+	{
+		toggleSchedulerEp = makeToggleSchedulerEndpoint(usecase)
+		toggleSchedulerEp = middleware.BasicAuthMiddleware()(toggleSchedulerEp)
+	}
+
+	var backupEp endpoint.Endpoint
+	{
+		backupEp = makeBackupEndpoint(usecase)
+		backupEp = middleware.BasicAuthMiddleware()(backupEp)
+	}
+
 	return ClockwerkEndpoint{
-		GetSchedulersEndpoint:   makeGetSchedulersEndpoint(usecase),
-		AddSchedulerEndpoint:    makeAddSchedulerEndpoint(usecase),
-		DeleteSchedulerEndpoint: makeDeleteSchedulerEndpoint(usecase),
-		ToggleSchedulerEndpoint: makeToggleSchedulerEndpoint(usecase),
+		GetSchedulersEndpoint:   getSchedulersEp,
+		AddSchedulerEndpoint:    addSchedulerEp,
+		DeleteSchedulerEndpoint: deleteSchedulerEp,
+		ToggleSchedulerEndpoint: toggleSchedulerEp,
+		BackupEndpoint:          backupEp,
 	}
 }

@@ -7,10 +7,12 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/soheilhy/cmux"
 	ep "gitlab.com/nbdgocean6/clockwerk/endpoints"
+	"gitlab.com/nbdgocean6/clockwerk/gvar"
 	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
 	"gitlab.com/nbdgocean6/clockwerk/repository"
 	"gitlab.com/nbdgocean6/clockwerk/service"
 	"gitlab.com/nbdgocean6/clockwerk/transports"
+	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"log"
@@ -63,8 +65,17 @@ func MergeServer(service pb.ClockwerkServer, serverOptions []grpc.ServerOption) 
 
 func main() {
 	cronjb := cron.New()
-	repo := repository.NewRepo()
+	repo := repository.NewRepo("35.219.50.46", "6379", "root")
 	services := service.NewClockwerk(cronjb, repo)
+	services.Backup(context.Background(), nil)
 	server := transports.NewClockwerkServer(ep.NewClockwerkEndpoint(services))
+
+	hashByte, err := bcrypt.GenerateFromPassword([]byte("root"), bcrypt.DefaultCost)
+	if err != nil {
+		panic(err)
+	}
+	key := fmt.Sprintf("%s_%s",gvar.HashKeyMap, "nobita")
+	gvar.SyncMapHashStorage.Store(key, string(hashByte))
+
 	MergeServer(server, nil)
 }

@@ -13,6 +13,7 @@ type grpcClockwerkServer struct {
 	addScheduler    grpctransport.Handler
 	deleteScheduler grpctransport.Handler
 	toggleScheduler grpctransport.Handler
+	backup          grpctransport.Handler
 }
 
 func decodeRequest(_ context.Context, request interface{}) (interface{}, error) {
@@ -53,6 +54,14 @@ func (g grpcClockwerkServer) DeleteScheduler(ctx context.Context, selectSchedule
 
 func (g grpcClockwerkServer) ToggleScheduler(ctx context.Context, toggle *pb.SelectToggle) (*emptypb.Empty, error) {
 	_, res, err := g.toggleScheduler.ServeGRPC(ctx, toggle)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*emptypb.Empty), nil
+}
+
+func (g grpcClockwerkServer) Backup(ctx context.Context, empty *emptypb.Empty) (*emptypb.Empty, error) {
+	_, res, err := g.backup.ServeGRPC(ctx, empty)
 	if err != nil {
 		return nil, err
 	}

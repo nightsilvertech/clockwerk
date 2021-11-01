@@ -75,10 +75,10 @@ func (s *storage) All() (res *pb.Schedulers, err error) {
 	return &schedulers, nil
 }
 
-func NewRepo() _interface.Storage {
+func NewRepo(host, port, pass string) _interface.Storage {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "root",
+		Addr:     fmt.Sprintf("%s:%s", host, port),
+		Password: pass,
 		DB:       0,
 	})
 	return &storage{

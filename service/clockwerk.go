@@ -129,6 +129,30 @@ func (c clockwerk) ToggleScheduler(_ context.Context, toggle *pb.SelectToggle) (
 }
 
 func (c clockwerk) Backup(ctx context.Context, empty *emptypb.Empty) (*emptypb.Empty, error) {
+	schedulerData, err := c.repo.All()
+	if err != nil {
+		return nil, err
+	}
+	for _, scheduler := range schedulerData.Schedulers {
+		// create new scheduler with new entry id
+		entry, err := c.crn.AddFunc(scheduler.Spec, func() {
+			c.execution(scheduler)
+		})
+		if err != nil {
+			return nil, err
+		}
+		// remove data with old entry id
+		err = c.repo.Rem(scheduler.Id, scheduler.EntryId)
+		if err != nil {
+			return nil, err
+		}
+		// insert it to redis
+		scheduler.EntryId = int32(entry)
+		err = c.repo.Set(scheduler)
+		if err != nil {
+			return nil, err
+		}
+	}
 	return nil, nil
 }
 
