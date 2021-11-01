@@ -1,0 +1,11 @@
+type: google.api.Service
+config_version: 3
+http:
+  rules:
+    - selector: api.v1.Clockwerk.GetSchedulers
+      get: /v1/schedulers
+    - selector: api.v1.Clockwerk.AddScheduler
+      post: /v1/scheduler
+      body: "*"
+    - selector: api.v1.Clockwerk.DeleteScheduler
+      delete: /v1/scheduler/{id}

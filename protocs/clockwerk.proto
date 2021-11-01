@@ -1,0 +1,43 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package api.v1;
+option go_package = "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1/api/v1";
+
+message Scheduler {
+  string id = 1;
+  int32 entry_id = 2;
+  string name = 3;
+  string executor = 4;
+  string command = 5;
+  string url = 6;
+  string method = 7;
+  string body = 8;
+  repeated string headers = 9;
+  string spec = 10;
+  bool disabled = 11;
+  bool persist = 12;
+  int64 created_at = 13;
+}
+
+message Schedulers {
+  repeated Scheduler schedulers = 1;
+}
+
+message SelectScheduler {
+  string id = 1;
+  int32 entry_id = 2;
+}
+
+message SelectToggle {
+  string id = 1;
+  int32 entry_id = 2;
+  bool disabled = 3;
+}
+
+service Clockwerk {
+  rpc GetSchedulers(google.protobuf.Empty) returns (Schedulers);
+  rpc AddScheduler(Scheduler) returns (Scheduler);
+  rpc DeleteScheduler(SelectScheduler) returns (google.protobuf.Empty);
+  rpc ToggleScheduler(SelectToggle) returns (google.protobuf.Empty);
+  rpc Backup(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
