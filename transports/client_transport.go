@@ -36,6 +36,9 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			pb.Schedulers{},
+			grpctransport.ClientBefore(
+				ContextToBasicAuthMetadata(),
+			),
 		).Endpoint()
 	}
 
@@ -53,6 +56,9 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			pb.Scheduler{},
+			grpctransport.ClientBefore(
+				ContextToBasicAuthMetadata(),
+			),
 		).Endpoint()
 	}
 
@@ -70,6 +76,9 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			&emptypb.Empty{},
+			grpctransport.ClientBefore(
+				ContextToBasicAuthMetadata(),
+			),
 		).Endpoint()
 	}
 
@@ -87,6 +96,9 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			&emptypb.Empty{},
+			grpctransport.ClientBefore(
+				ContextToBasicAuthMetadata(),
+			),
 		).Endpoint()
 	}
 

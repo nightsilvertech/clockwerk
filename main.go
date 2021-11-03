@@ -88,8 +88,6 @@ func PrepareEnvironment() {
 	if len(redisHost) == 0 || len(redisPort) == 0 || len(redisPass) == 0{
 		panic("please set your redis host, port and password")
 	}
-
-	fmt.Println(username, password, redisHost, redisPort, redisPass)
 }
 
 func main() {
