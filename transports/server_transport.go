@@ -10,6 +10,7 @@ import (
 )
 
 type grpcClockwerkServer struct {
+	pb.UnimplementedClockwerkServer
 	getSchedulers   grpctransport.Handler
 	addScheduler    grpctransport.Handler
 	deleteScheduler grpctransport.Handler
