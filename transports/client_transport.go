@@ -20,7 +20,7 @@ func decodeResponse(_ context.Context, response interface{}) (interface{}, error
 	return response, nil
 }
 
-func NewGRPProgramClient(conn *grpc.ClientConn) _interface.Clockwerk {
+func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 
 	var getSchedulersEp endpoint.Endpoint
 	{
