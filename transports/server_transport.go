@@ -18,11 +18,11 @@ type grpcClockwerkServer struct {
 	backup          grpctransport.Handler
 }
 
-func decodeRequest(_ context.Context, request interface{}) (interface{}, error) {
+func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }
 
-func encodeResponse(_ context.Context, response interface{}) (interface{}, error) {
+func encodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
 	return response, nil
 }
 
@@ -71,11 +71,7 @@ func (g grpcClockwerkServer) Backup(ctx context.Context, empty *emptypb.Empty) (
 }
 
 func NewClockwerkServer(endpoints ep.ClockwerkEndpoint) pb.ClockwerkServer {
-	options := []grpctransport.ServerOption{
-		grpctransport.ServerBefore(
-			BasicAuthMetadataToContext(),
-		),
-	}
+	options := []grpctransport.ServerOption{}
 	return &grpcClockwerkServer{
 		getSchedulers: grpctransport.NewServer(
 			endpoints.GetSchedulersEndpoint,

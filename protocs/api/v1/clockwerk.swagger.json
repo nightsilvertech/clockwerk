@@ -93,6 +93,12 @@
         "createdAt": {
           "type": "string",
           "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         }
       }
     },

@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/nightsilvertech/clockwerk/gvar"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"time"
 
@@ -44,7 +46,8 @@ func (c clockwerk) httpExecutor(scheduler *pb.Scheduler) (res string, err error)
 
 func (c clockwerk) persistenceCheck(scheduler *pb.Scheduler) {
 	if !scheduler.Persist {
-		_, err := c.DeleteScheduler(nil, &pb.SelectScheduler{Id: scheduler.Id, EntryId: scheduler.EntryId})
+		c.crn.Remove(cron.EntryID(scheduler.EntryId))
+		err := c.repo.Rem(scheduler.Id, scheduler.EntryId)
 		if err != nil {
 			log.Println(fmt.Sprintf("not persist failed to delete scheduler with id %s and entry id %d", scheduler.Id, scheduler.EntryId))
 		} else {
@@ -81,6 +84,19 @@ func (c clockwerk) execution(scheduler *pb.Scheduler) {
 	}
 }
 
+func (c clockwerk) verifyBasicAuth(username, password string) error {
+	key := fmt.Sprintf("%s_%s", gvar.HashKeyMap, username)
+	hashedPassword, ok := gvar.SyncMapHashStorage.Load(key)
+	if !ok {
+		return errors.New("username not found")
+	}
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword.(string)), []byte(password))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c clockwerk) GetSchedulers(ctx context.Context, _ *emptypb.Empty) (res *pb.Schedulers, err error) {
 	res, err = c.repo.All()
 	log.Println("success to get schedulers totals", len(res.Schedulers))
@@ -88,6 +104,10 @@ func (c clockwerk) GetSchedulers(ctx context.Context, _ *emptypb.Empty) (res *pb
 }
 
 func (c clockwerk) AddScheduler(ctx context.Context, scheduler *pb.Scheduler) (res *pb.Scheduler, err error) {
+	err = c.verifyBasicAuth(scheduler.Username, scheduler.Password)
+	if err != nil {
+		return res, err
+	}
 	entry, err := c.crn.AddFunc(scheduler.Spec, func() {
 		c.execution(scheduler)
 	})
@@ -102,12 +122,20 @@ func (c clockwerk) AddScheduler(ctx context.Context, scheduler *pb.Scheduler) (r
 }
 
 func (c clockwerk) DeleteScheduler(ctx context.Context, selectScheduler *pb.SelectScheduler) (res *emptypb.Empty, err error) {
+	err = c.verifyBasicAuth(selectScheduler.Username, selectScheduler.Password)
+	if err != nil {
+		return res, err
+	}
 	c.crn.Remove(cron.EntryID(selectScheduler.EntryId))
 	log.Println("success to delete scheduler")
 	return res, c.repo.Rem(selectScheduler.Id, selectScheduler.EntryId)
 }
 
 func (c clockwerk) ToggleScheduler(ctx context.Context, toggle *pb.SelectToggle) (res *emptypb.Empty, err error) {
+	err = c.verifyBasicAuth(toggle.Username, toggle.Password)
+	if err != nil {
+		return res, err
+	}
 	scheduler, err := c.repo.Get(toggle.Id, toggle.EntryId)
 	if err != nil {
 		return res, err

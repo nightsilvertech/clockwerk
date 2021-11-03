@@ -12,11 +12,11 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func encodeRequest(_ context.Context, request interface{}) (interface{}, error) {
+func encodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }
 
-func decodeResponse(_ context.Context, response interface{}) (interface{}, error) {
+func decodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
 	return response, nil
 }
 
@@ -36,9 +36,6 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			pb.Schedulers{},
-			grpctransport.ClientBefore(
-				ContextToBasicAuthMetadata(),
-			),
 		).Endpoint()
 	}
 
@@ -56,9 +53,6 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			pb.Scheduler{},
-			grpctransport.ClientBefore(
-				ContextToBasicAuthMetadata(),
-			),
 		).Endpoint()
 	}
 
@@ -76,9 +70,6 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			&emptypb.Empty{},
-			grpctransport.ClientBefore(
-				ContextToBasicAuthMetadata(),
-			),
 		).Endpoint()
 	}
 
@@ -96,9 +87,6 @@ func ClockwerkClient(conn *grpc.ClientConn) _interface.Clockwerk {
 			encodeRequest,
 			decodeResponse,
 			&emptypb.Empty{},
-			grpctransport.ClientBefore(
-				ContextToBasicAuthMetadata(),
-			),
 		).Endpoint()
 	}
 

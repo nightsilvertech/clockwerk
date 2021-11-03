@@ -3,11 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"net"
-	"net/http"
-	"os"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	ep "github.com/nightsilvertech/clockwerk/endpoints"
 	"github.com/nightsilvertech/clockwerk/gvar"
@@ -20,6 +15,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
+	"log"
+	"net"
+	"net/http"
 )
 
 var redisHost, redisPort, redisPass string
@@ -76,15 +74,15 @@ func CreatedCredential(username, password string) {
 }
 
 func PrepareEnvironment() {
-	username = os.Getenv("USERNAME")
-	password = os.Getenv("PASSWORD")
+	username = "nobita"
+	password = "root"
 	if len(username) == 0 || len(password) == 0 {
 		panic("please set your credential")
 	}
 
-	redisHost = os.Getenv("REDIS_HOST")
-	redisPort = os.Getenv("REDIS_PORT")
-	redisPass = os.Getenv("REDIS_PASS")
+	redisHost = "35.219.50.46"
+	redisPort = "6379"
+	redisPass = "root"
 	if len(redisHost) == 0 || len(redisPort) == 0 || len(redisPass) == 0{
 		panic("please set your redis host, port and password")
 	}

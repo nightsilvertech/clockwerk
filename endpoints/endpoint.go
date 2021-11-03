@@ -2,9 +2,9 @@ package endpoints
 
 import (
 	"context"
+	"github.com/nightsilvertech/clockwerk/middleware"
 
 	"github.com/go-kit/kit/endpoint"
-	"github.com/nightsilvertech/clockwerk/middleware"
 	pb "github.com/nightsilvertech/clockwerk/protocs/api/v1"
 	_interface "github.com/nightsilvertech/clockwerk/service/interface"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -103,25 +103,21 @@ func NewClockwerkEndpoint(usecase _interface.Clockwerk) ClockwerkEndpoint {
 	var addSchedulerEp endpoint.Endpoint
 	{
 		addSchedulerEp = makeAddSchedulerEndpoint(usecase)
-		addSchedulerEp = middleware.BasicAuthMiddleware()(addSchedulerEp)
 	}
 
 	var deleteSchedulerEp endpoint.Endpoint
 	{
 		deleteSchedulerEp = makeDeleteSchedulerEndpoint(usecase)
-		deleteSchedulerEp = middleware.BasicAuthMiddleware()(deleteSchedulerEp)
 	}
 
 	var toggleSchedulerEp endpoint.Endpoint
 	{
 		toggleSchedulerEp = makeToggleSchedulerEndpoint(usecase)
-		toggleSchedulerEp = middleware.BasicAuthMiddleware()(toggleSchedulerEp)
 	}
 
 	var backupEp endpoint.Endpoint
 	{
 		backupEp = makeBackupEndpoint(usecase)
-		backupEp = middleware.BasicAuthMiddleware()(backupEp)
 	}
 
 	return ClockwerkEndpoint{
