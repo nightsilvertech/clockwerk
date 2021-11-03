@@ -20,7 +20,7 @@ func CtxBasicAuth(ctx context.Context, username, password string) context.Contex
 
 func BasicAuthMetadataToContext() grpctransport.ServerRequestFunc {
 	return func(ctx context.Context, md metadata.MD) context.Context {
-		requestID, ok := md[string(clockwerkContextMetadata)]
+		requestID, ok := md["authorization"]
 		if !ok {
 			return ctx
 		}
@@ -35,7 +35,7 @@ func ContextToBasicAuthMetadata() grpctransport.ClientRequestFunc {
 	return func(ctx context.Context, md *metadata.MD) context.Context {
 		requestID, ok := ctx.Value(clockwerkContextBasicAuth).(string)
 		if ok {
-			(*md)[string(clockwerkContextMetadata)] = []string{requestID}
+			(*md)["authorization"] = []string{requestID}
 		}
 		return ctx
 	}
