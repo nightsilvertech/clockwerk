@@ -81,13 +81,13 @@ func (c clockwerk) execution(scheduler *pb.Scheduler) {
 	}
 }
 
-func (c clockwerk) GetSchedulers(_ context.Context, _ *emptypb.Empty) (res *pb.Schedulers, err error) {
+func (c clockwerk) GetSchedulers(ctx context.Context, _ *emptypb.Empty) (res *pb.Schedulers, err error) {
 	res, err = c.repo.All()
 	log.Println("success to get schedulers totals", len(res.Schedulers))
 	return
 }
 
-func (c clockwerk) AddScheduler(_ context.Context, scheduler *pb.Scheduler) (res *pb.Scheduler, err error) {
+func (c clockwerk) AddScheduler(ctx context.Context, scheduler *pb.Scheduler) (res *pb.Scheduler, err error) {
 	entry, err := c.crn.AddFunc(scheduler.Spec, func() {
 		c.execution(scheduler)
 	})
@@ -101,13 +101,13 @@ func (c clockwerk) AddScheduler(_ context.Context, scheduler *pb.Scheduler) (res
 	return scheduler, c.repo.Set(scheduler)
 }
 
-func (c clockwerk) DeleteScheduler(_ context.Context, selectScheduler *pb.SelectScheduler) (res *emptypb.Empty, err error) {
+func (c clockwerk) DeleteScheduler(ctx context.Context, selectScheduler *pb.SelectScheduler) (res *emptypb.Empty, err error) {
 	c.crn.Remove(cron.EntryID(selectScheduler.EntryId))
 	log.Println("success to delete scheduler")
 	return res, c.repo.Rem(selectScheduler.Id, selectScheduler.EntryId)
 }
 
-func (c clockwerk) ToggleScheduler(_ context.Context, toggle *pb.SelectToggle) (res *emptypb.Empty, err error) {
+func (c clockwerk) ToggleScheduler(ctx context.Context, toggle *pb.SelectToggle) (res *emptypb.Empty, err error) {
 	scheduler, err := c.repo.Get(toggle.Id, toggle.EntryId)
 	if err != nil {
 		return res, err
