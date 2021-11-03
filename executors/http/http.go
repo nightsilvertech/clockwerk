@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	pb "github.com/nightsilvertech/clockwerk/protocs/api/v1"
 )
 
 const (

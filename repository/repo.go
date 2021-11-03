@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis/v8"
-	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
-	_interface "gitlab.com/nbdgocean6/clockwerk/repository/interface"
 	"sort"
+
+	"github.com/go-redis/redis/v8"
+	pb "github.com/nightsilvertech/clockwerk/protocs/api/v1"
+	_interface "github.com/nightsilvertech/clockwerk/repository/interface"
 )
 
 type storage struct {

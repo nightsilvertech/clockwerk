@@ -2,10 +2,11 @@ package endpoints
 
 import (
 	"context"
+
 	"github.com/go-kit/kit/endpoint"
-	"gitlab.com/nbdgocean6/clockwerk/middleware"
-	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
-	_interface "gitlab.com/nbdgocean6/clockwerk/service/interface"
+	"github.com/nightsilvertech/clockwerk/middleware"
+	pb "github.com/nightsilvertech/clockwerk/protocs/api/v1"
+	_interface "github.com/nightsilvertech/clockwerk/service/interface"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

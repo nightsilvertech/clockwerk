@@ -4,16 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/robfig/cron/v3"
-	uuid "github.com/satori/go.uuid"
-	"gitlab.com/nbdgocean6/clockwerk/executors"
-	executorhttp "gitlab.com/nbdgocean6/clockwerk/executors/http"
-	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
-	_interfacerepo "gitlab.com/nbdgocean6/clockwerk/repository/interface"
-	_interface "gitlab.com/nbdgocean6/clockwerk/service/interface"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"time"
+
+	"github.com/nightsilvertech/clockwerk/executors"
+	executorhttp "github.com/nightsilvertech/clockwerk/executors/http"
+	pb "github.com/nightsilvertech/clockwerk/protocs/api/v1"
+	_interfacerepo "github.com/nightsilvertech/clockwerk/repository/interface"
+	_interface "github.com/nightsilvertech/clockwerk/service/interface"
+	"github.com/robfig/cron/v3"
+	uuid "github.com/satori/go.uuid"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type clockwerk struct {

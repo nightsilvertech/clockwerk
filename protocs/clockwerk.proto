@@ -1,7 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 package api.v1;
-option go_package = "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1/api/v1";
+option go_package = "github.com/nightsilvertech/clockwerk/protocs/api/v1/api/v1";
 
 message Scheduler {
   string id = 1;

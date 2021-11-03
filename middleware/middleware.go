@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/go-kit/kit/endpoint"
-	"gitlab.com/nbdgocean6/clockwerk/gvar"
+	"github.com/nightsilvertech/clockwerk/gvar"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/metadata"
-	"strings"
 )
 
 func BasicAuthMiddleware() endpoint.Middleware {

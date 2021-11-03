@@ -2,11 +2,12 @@ package transports
 
 import (
 	"context"
+
 	"github.com/go-kit/kit/endpoint"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	ep "gitlab.com/nbdgocean6/clockwerk/endpoints"
-	pb "gitlab.com/nbdgocean6/clockwerk/protocs/api/v1"
-	_interface "gitlab.com/nbdgocean6/clockwerk/service/interface"
+	ep "github.com/nightsilvertech/clockwerk/endpoints"
+	pb "github.com/nightsilvertech/clockwerk/protocs/api/v1"
+	_interface "github.com/nightsilvertech/clockwerk/service/interface"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

@@ -1,4 +1,4 @@
-module gitlab.com/nbdgocean6/clockwerk
+module github.com/nightsilvertech/clockwerk
 
 go 1.17
 
@@ -6,12 +6,12 @@ require (
 	github.com/go-kit/kit v0.12.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
-	github.com/robfig/cron/v3 v3.0.0
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/soheilhy/cmux v0.1.5
-	golang.org/x/crypto v0.0.0-20210915214749-c084706c2272
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	google.golang.org/grpc v1.40.0
+	google.golang.org/grpc v1.42.0
 	google.golang.org/protobuf v1.27.1
 )
 

@@ -18,8 +18,6 @@ COPY go.mod .
 COPY go.sum .
 
 # Download dependencies
-RUN git config --global url."https://gitlab-ci-token:Qze6NiCgRcLJyyrhUNxn@gitlab.com/".insteadOf "https://gitlab.com/"
-RUN go env -w GOPRIVATE=gitlab.com/nbdgocean6
 RUN go clean --modcache
 RUN go mod download
 
@@ -27,21 +25,21 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN go build -o nobita-promo-scheduler .
+RUN go build -o clockwerk .
 
 # Move to /dist directory as the place for resulting binary folder
 WORKDIR /dist
 
 # Copy binary from build to main folder
-RUN cp /build/nobita-promo-scheduler .
+RUN cp /build/clockwerk .
 
 # Build a small image
 FROM scratch
 
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder /dist/nobita-promo-scheduler /
+COPY --from=builder /dist/clockwerk /
 ENV TZ=Asia/Jakarta
 
 # Command to run
-ENTRYPOINT ["/nobita-promo-scheduler"]
+ENTRYPOINT ["/clockwerk"]
