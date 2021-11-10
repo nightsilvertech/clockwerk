@@ -71,31 +71,26 @@ func (g grpcClockwerkServer) Backup(ctx context.Context, empty *emptypb.Empty) (
 }
 
 func NewClockwerkServer(endpoints ep.ClockwerkEndpoint) pb.ClockwerkServer {
-	options := []grpctransport.ServerOption{}
 	return &grpcClockwerkServer{
 		getSchedulers: grpctransport.NewServer(
 			endpoints.GetSchedulersEndpoint,
 			decodeRequest,
 			encodeResponse,
-			options...,
 		),
 		addScheduler: grpctransport.NewServer(
 			endpoints.AddSchedulerEndpoint,
 			decodeRequest,
 			encodeResponse,
-			options...,
 		),
 		deleteScheduler: grpctransport.NewServer(
 			endpoints.DeleteSchedulerEndpoint,
 			decodeRequest,
 			encodeEmptyPbResponse,
-			options...,
 		),
 		toggleScheduler: grpctransport.NewServer(
 			endpoints.ToggleSchedulerEndpoint,
 			decodeRequest,
 			encodeEmptyPbResponse,
-			options...,
 		),
 	}
 }
