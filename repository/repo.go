@@ -26,7 +26,13 @@ const (
 	defaultRedisDB = 0
 )
 
+func (s *storage) removeCredential(scheduler *pb.Scheduler) {
+	scheduler.Username = ""
+	scheduler.Password = ""
+}
+
 func (s *storage) Set(scheduler *pb.Scheduler) error {
+	s.removeCredential(scheduler)
 	ctx := context.Background()
 	defer ctx.Done()
 	var key = fmt.Sprintf(redisSchedulerData, scheduler.Id, scheduler.EntryId)

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/nightsilvertech/clockwerk/constant"
 	"log"
 	"net"
 	"net/http"
@@ -23,7 +24,7 @@ import (
 )
 
 var redisHost, redisPort, redisPass string
-var username, password string
+var username, password, port string
 
 func ServeGRPC(listener net.Listener, service pb.ClockwerkServer, serverOptions []grpc.ServerOption) error {
 	var grpcServer *grpc.Server
@@ -46,7 +47,9 @@ func ServeHTTP(listener net.Listener, service pb.ClockwerkServer) error {
 }
 
 func MergeServer(service pb.ClockwerkServer, serverOptions []grpc.ServerOption) {
-	port := fmt.Sprintf(":%s", "1929")
+	if len(port) <= 0 {
+		port = fmt.Sprintf(":%s", constant.DefaultPort)
+	}
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
 		panic(err)
@@ -75,7 +78,9 @@ func CreatedCredential(username, password string) {
 	gvar.SyncMapHashStorage.Store(key, string(hashByte))
 }
 
-func PrepareEnvironment() {
+func PrepareCredential() {
+	port = os.Getenv("PORT")
+
 	username = os.Getenv("USERNAME")
 	password = os.Getenv("PASSWORD")
 	if len(username) == 0 || len(password) == 0 {
@@ -85,18 +90,18 @@ func PrepareEnvironment() {
 	redisHost = os.Getenv("REDIS_HOST")
 	redisPort = os.Getenv("REDIS_PORT")
 	redisPass = os.Getenv("REDIS_PASS")
-	if len(redisHost) == 0 || len(redisPort) == 0 || len(redisPass) == 0{
+	if len(redisHost) == 0 || len(redisPort) == 0 || len(redisPass) == 0 {
 		panic("please set your redis host, port and password")
 	}
 }
 
 func main() {
-	PrepareEnvironment()
+	PrepareCredential()
 	CreatedCredential(username, password)
 	cronjb := cron.New()
 	repo := repository.NewRepo(redisHost, redisPort, redisPass)
 	services := service.NewClockwerk(cronjb, repo)
-	services.Backup(context.Background(), nil)
+	_, _ = services.Backup(context.Background(), nil)
 	server := transports.NewClockwerkServer(ep.NewClockwerkEndpoint(services))
 	MergeServer(server, nil)
 }
