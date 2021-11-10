@@ -22,6 +22,8 @@ const (
 	redisSchedulersData = `scheduler:*`
 	// expiration never expired
 	expiration = 0
+	// defaultRedisDB default redis database
+	defaultRedisDB = 0
 )
 
 func (s *storage) Set(scheduler *pb.Scheduler) error {
@@ -79,8 +81,8 @@ func (s *storage) All() (res *pb.Schedulers, err error) {
 func NewRepo(host, port, pass string) _interface.Storage {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", host, port),
+		DB:       defaultRedisDB,
 		Password: pass,
-		DB:       0,
 	})
 	return &storage{
 		cache: rdb,
