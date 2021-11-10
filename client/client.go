@@ -23,22 +23,6 @@ type clockwerkClient struct {
 	ClockwerkServer clockwerksvc.Clockwerk
 }
 
-//_, err = s.repo.Scheduler.AddScheduler(ctx, &pbclockwerk.Scheduler{
-//	Username: username,
-//	Password: password,
-//	Name:     fmt.Sprintf("update program id %s status to inactivate", programID),
-//	Url:      fmt.Sprintf(programconst.UpdateProgramStatusURL+"%s/%d", programID, programconst.ProgramInactive),
-//	Executor: schedulerexecutor.HTTP,
-//	Method:   schedulerhttpmethod.MethodPut,
-//	Disabled: false,
-//	Persist:  false,
-//	Spec:     fmt.Sprintf("0 0 %d %d *", endAtTime.Day(), int(endAtTime.Month())),
-//	Headers: []string{
-//		"Content-Type|application/json",
-//		fmt.Sprintf("Authorization|Basic %s:%s", systemUsername, systemPassword),
-//	},
-//})
-
 type HTTPHeader struct {
 	K, V string
 }
