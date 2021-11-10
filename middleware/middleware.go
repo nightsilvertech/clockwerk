@@ -47,7 +47,7 @@ func BasicAuthMiddleware() endpoint.Middleware {
 			if !ok {
 				return nil, errors.New("username not found")
 			}
-			err := bcrypt.CompareHashAndPassword([]byte(hashedPassword.(string)), []byte(password))
+			err = bcrypt.CompareHashAndPassword([]byte(hashedPassword.(string)), []byte(password))
 			if err != nil {
 				return nil, err
 			}
