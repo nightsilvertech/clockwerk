@@ -20,14 +20,11 @@
     "protobufAny": {
       "type": "object",
       "properties": {
-        "typeUrl": {
+        "@type": {
           "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
         }
-      }
+      },
+      "additionalProperties": {}
     },
     "rpcStatus": {
       "type": "object",
@@ -56,6 +53,9 @@
         "entryId": {
           "type": "integer",
           "format": "int32"
+        },
+        "referenceId": {
+          "type": "string"
         },
         "name": {
           "type": "string"

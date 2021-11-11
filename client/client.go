@@ -13,8 +13,8 @@ import (
 
 type ClockwerkClient interface {
 	Add(scheduler SchedulerHTTP) (SchedulerHTTP, error)
-	Del()
-	Toggle()
+	Del(schedulerSelect SchedulerSelect) error
+	Toggle(schedulerToggle SchedulerToggle) error
 }
 
 type clockwerkClient struct {
@@ -23,20 +23,24 @@ type clockwerkClient struct {
 	ClockwerkServer clockwerksvc.Clockwerk
 }
 
+// HTTPHeader simple http header representation of request
 type HTTPHeader struct {
 	K, V string
 }
 
+// String convert HTTPHeader to string version split by bar sign '|'
 func (hh *HTTPHeader) String() string {
 	return fmt.Sprintf("%s|%s", hh.K, hh.V)
 }
 
+// SchedulerHTTP simple version of protoc stub for add scheduler
 type SchedulerHTTP struct {
 	Name, URL, Executor, Method, Spec string
 	Disabled, Persist                 bool
 	HTTPHeader                        []HTTPHeader
 }
 
+// toProtocStub part of SchedulerHTTP for convert from simple version to protoc stub
 func (sh *SchedulerHTTP) toProtocStub(client clockwerkClient) *pbclockwerk.Scheduler {
 	var headers []string
 	for _, header := range sh.HTTPHeader {
@@ -53,6 +57,40 @@ func (sh *SchedulerHTTP) toProtocStub(client clockwerkClient) *pbclockwerk.Sched
 		Disabled: sh.Disabled,
 		Persist:  sh.Persist,
 		Spec:     sh.Spec,
+	}
+}
+
+// SchedulerSelect simple version of protoc stub for delete scheduler
+type SchedulerSelect struct {
+	Id      string
+	EntryId int32
+}
+
+// toProtocStub part of SchedulerSelect for convert from simple version to protoc stub
+func (ss *SchedulerSelect) toProtocStub(client clockwerkClient) *pbclockwerk.SelectScheduler {
+	return &pbclockwerk.SelectScheduler{
+		Username: client.Username,
+		Password: client.Password,
+		Id:       ss.Id,
+		EntryId:  ss.EntryId,
+	}
+}
+
+// SchedulerToggle simple version of protoc stub for toggle scheduler
+type SchedulerToggle struct {
+	Id       string
+	EntryId  int32
+	Disabled bool
+}
+
+// toProtocStub part of SchedulerHTTP for convert from simple version to protoc stub
+func (st *SchedulerToggle) toProtocStub(client clockwerkClient) *pbclockwerk.SelectToggle {
+	return &pbclockwerk.SelectToggle{
+		Username: client.Username,
+		Password: client.Password,
+		Id:       st.Id,
+		EntryId:  st.EntryId,
+		Disabled: st.Disabled,
 	}
 }
 
@@ -81,12 +119,24 @@ func (c clockwerkClient) Add(scheduler SchedulerHTTP) (res SchedulerHTTP, err er
 	return res, nil
 }
 
-func (c clockwerkClient) Del() {
-	panic("implement me")
+func (c clockwerkClient) Del(schedulerSelect SchedulerSelect) error {
+	ctx := context.Background()
+	defer ctx.Done()
+	_, err := c.ClockwerkServer.DeleteScheduler(ctx, schedulerSelect.toProtocStub(c))
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (c clockwerkClient) Toggle() {
-	panic("implement me")
+func (c clockwerkClient) Toggle(schedulerToggle SchedulerToggle) error {
+	ctx := context.Background()
+	defer ctx.Done()
+	_, err := c.ClockwerkServer.ToggleScheduler(ctx, schedulerToggle.toProtocStub(c))
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewClockwerk(host, port, username, password string) (ClockwerkClient, error) {

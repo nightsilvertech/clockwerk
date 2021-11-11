@@ -27,6 +27,7 @@ var redisHost, redisPort, redisPass string
 var username, password, port string
 
 func ServeGRPC(listener net.Listener, service pb.ClockwerkServer, serverOptions []grpc.ServerOption) error {
+	log.Println("server grpc server")
 	var grpcServer *grpc.Server
 	if len(serverOptions) > 0 {
 		grpcServer = grpc.NewServer(serverOptions...)
@@ -38,6 +39,7 @@ func ServeGRPC(listener net.Listener, service pb.ClockwerkServer, serverOptions 
 }
 
 func ServeHTTP(listener net.Listener, service pb.ClockwerkServer) error {
+	log.Println("server http server")
 	mux := runtime.NewServeMux()
 	err := pb.RegisterClockwerkHandlerServer(context.Background(), mux, service)
 	if err != nil {
@@ -47,7 +49,7 @@ func ServeHTTP(listener net.Listener, service pb.ClockwerkServer) error {
 }
 
 func MergeServer(service pb.ClockwerkServer, serverOptions []grpc.ServerOption) {
-	if len(port) <= 0 {
+	if len(port) > 0 {
 		port = fmt.Sprintf(":%s", constant.DefaultPort)
 	}
 	listener, err := net.Listen("tcp", port)
@@ -80,13 +82,12 @@ func CreatedCredential(username, password string) {
 
 func PrepareCredential() {
 	port = os.Getenv("PORT")
-
-	username = os.Getenv("USERNAME")
-	password = os.Getenv("PASSWORD")
+	username = os.Getenv("SCHEDULER_USERNAME")
+	password = os.Getenv("SCHEDULER_PASSWORD")
 	if len(username) == 0 || len(password) == 0 {
 		panic("please set your credential")
 	}
-
+	fmt.Println(username, password)
 	redisHost = os.Getenv("REDIS_HOST")
 	redisPort = os.Getenv("REDIS_PORT")
 	redisPass = os.Getenv("REDIS_PASS")

@@ -6,19 +6,20 @@ option go_package = "github.com/nightsilvertech/clockwerk/protocs/api/v1/api/v1"
 message Scheduler {
   string id = 1;
   int32 entry_id = 2;
-  string name = 3;
-  string executor = 4;
-  string command = 5;
-  string url = 6;
-  string method = 7;
-  string body = 8;
-  repeated string headers = 9;
-  string spec = 10;
-  bool disabled = 11;
-  bool persist = 12;
-  int64 created_at = 13;
-  string username = 14;
-  string password = 15;
+  string reference_id = 3;
+  string name = 4;
+  string executor = 5;
+  string command = 6;
+  string url = 7;
+  string method = 8;
+  string body = 9;
+  repeated string headers = 10;
+  string spec = 11;
+  bool disabled = 12;
+  bool persist = 13;
+  int64 created_at = 14;
+  string username = 15;
+  string password = 16;
 }
 
 message Schedulers {
@@ -28,16 +29,18 @@ message Schedulers {
 message SelectScheduler {
   string id = 1;
   int32 entry_id = 2;
-  string username = 3;
-  string password = 4;
+  string reference_id = 3;
+  string username = 4;
+  string password = 5;
 }
 
 message SelectToggle {
   string id = 1;
   int32 entry_id = 2;
-  bool disabled = 3;
-  string username = 4;
-  string password = 5;
+  string reference_id = 3;
+  bool disabled = 4;
+  string username = 5;
+  string password = 6;
 }
 
 service Clockwerk {

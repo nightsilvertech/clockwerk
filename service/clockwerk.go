@@ -99,6 +99,9 @@ func (c clockwerk) verifyBasicAuth(username, password string) error {
 
 func (c clockwerk) GetSchedulers(ctx context.Context, _ *emptypb.Empty) (res *pb.Schedulers, err error) {
 	res, err = c.repo.All()
+	if err != nil {
+		return nil, err
+	}
 	log.Println("success to get schedulers totals", len(res.Schedulers))
 	return
 }
