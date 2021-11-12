@@ -6,7 +6,13 @@ import (
 
 type Storage interface {
 	Set(scheduler *pb.Scheduler) error
-	Rem(id string, entryID int32) error
-	Get(id string, entryID int32) (*pb.Scheduler, error)
+	Rem(id string, refID string) error
+	Get(id string, refID string) (*pb.Scheduler, error)
 	All() (*pb.Schedulers, error)
+	SetRetryAttempts(id string, refID string, retryAttempts int32) error
+	GetRetryAttempts(id string, refID string) (int32, error)
+	SetRetryAttemptsUsed(id string, refID string, retryAttemptsUsed int32) error
+	GetRetryAttemptsUsed(id string, refID string) (int32, error)
+	RemRetryAttempts(id string, refID string) error
+	RemRetryAttemptsUsed(id string, refID string) error
 }

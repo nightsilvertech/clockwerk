@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/nightsilvertech/clockwerk/constant"
 	"log"
 	"net"
@@ -27,7 +28,7 @@ var redisHost, redisPort, redisPass string
 var username, password, port string
 
 func ServeGRPC(listener net.Listener, service pb.ClockwerkServer, serverOptions []grpc.ServerOption) error {
-	log.Println("server grpc server")
+	log.Println(fmt.Sprintf("grpc served at port %s", port))
 	var grpcServer *grpc.Server
 	if len(serverOptions) > 0 {
 		grpcServer = grpc.NewServer(serverOptions...)
@@ -39,7 +40,7 @@ func ServeGRPC(listener net.Listener, service pb.ClockwerkServer, serverOptions 
 }
 
 func ServeHTTP(listener net.Listener, service pb.ClockwerkServer) error {
-	log.Println("server http server")
+	log.Println(fmt.Sprintf("http served at port %s", port))
 	mux := runtime.NewServeMux()
 	err := pb.RegisterClockwerkHandlerServer(context.Background(), mux, service)
 	if err != nil {
@@ -81,19 +82,23 @@ func CreatedCredential(username, password string) {
 }
 
 func PrepareCredential() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	port = os.Getenv("PORT")
 	username = os.Getenv("SCHEDULER_USERNAME")
 	password = os.Getenv("SCHEDULER_PASSWORD")
 	if len(username) == 0 || len(password) == 0 {
 		panic("please set your credential")
 	}
-	fmt.Println(username, password)
 	redisHost = os.Getenv("REDIS_HOST")
 	redisPort = os.Getenv("REDIS_PORT")
 	redisPass = os.Getenv("REDIS_PASS")
 	if len(redisHost) == 0 || len(redisPort) == 0 || len(redisPass) == 0 {
 		panic("please set your redis host, port and password")
 	}
+	log.Println(fmt.Sprintf("connect to redis at %s port %s", redisHost, redisPort))
 }
 
 func main() {

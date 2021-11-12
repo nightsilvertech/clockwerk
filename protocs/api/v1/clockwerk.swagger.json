@@ -75,6 +75,14 @@
         "body": {
           "type": "string"
         },
+        "retry": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "retryThreshold": {
+          "type": "integer",
+          "format": "int32"
+        },
         "headers": {
           "type": "array",
           "items": {
