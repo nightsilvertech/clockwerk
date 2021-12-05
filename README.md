@@ -8,7 +8,7 @@
   <img alt="maintained: yes" src="https://img.shields.io/badge/Maintained-Yes-green.svg" />
 </p>
 
-> Clockwerk is a distributed cron service with API for doing http job, and the dashboard is still on development
+> A distributed cron service with API for doing http job, and the dashboard is still on development
 
 ----
 
