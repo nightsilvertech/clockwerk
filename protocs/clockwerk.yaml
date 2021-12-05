@@ -2,6 +2,16 @@ type: google.api.Service
 config_version: 3
 http:
   rules:
+    - selector: api.v1.Clockwerk.GetDummy
+      get: /v1/dummy
+    - selector: api.v1.Clockwerk.PostDummy
+      post: /v1/dummy
+      body: "*"
+    - selector: api.v1.Clockwerk.DeleteDummy
+      delete: /v1/dummy
+    - selector: api.v1.Clockwerk.PutDummy
+      put: /v1/dummy
+
     - selector: api.v1.Clockwerk.GetSchedulers
       get: /v1/schedulers
     - selector: api.v1.Clockwerk.AddScheduler

@@ -11,6 +11,10 @@ import (
 
 type grpcClockwerkServer struct {
 	pb.UnimplementedClockwerkServer
+	getDummy        grpctransport.Handler
+	postDummy       grpctransport.Handler
+	deleteDummy     grpctransport.Handler
+	putDummy        grpctransport.Handler
 	getSchedulers   grpctransport.Handler
 	addScheduler    grpctransport.Handler
 	deleteScheduler grpctransport.Handler
@@ -28,6 +32,38 @@ func encodeResponse(ctx context.Context, response interface{}) (interface{}, err
 
 func encodeEmptyPbResponse(_ context.Context, _ interface{}) (interface{}, error) {
 	return &emptypb.Empty{}, nil
+}
+
+func (g grpcClockwerkServer) GetDummy(ctx context.Context, empty *emptypb.Empty) (*emptypb.Empty, error) {
+	_, res, err := g.getDummy.ServeGRPC(ctx, empty)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*emptypb.Empty), nil
+}
+
+func (g grpcClockwerkServer) PostDummy(ctx context.Context, empty *emptypb.Empty) (*emptypb.Empty, error) {
+	_, res, err := g.postDummy.ServeGRPC(ctx, empty)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*emptypb.Empty), nil
+}
+
+func (g grpcClockwerkServer) DeleteDummy(ctx context.Context, empty *emptypb.Empty) (*emptypb.Empty, error) {
+	_, res, err := g.deleteDummy.ServeGRPC(ctx, empty)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*emptypb.Empty), nil
+}
+
+func (g grpcClockwerkServer) PutDummy(ctx context.Context, empty *emptypb.Empty) (*emptypb.Empty, error) {
+	_, res, err := g.putDummy.ServeGRPC(ctx, empty)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*emptypb.Empty), nil
 }
 
 func (g grpcClockwerkServer) GetSchedulers(ctx context.Context, empty *emptypb.Empty) (*pb.Schedulers, error) {
@@ -72,6 +108,27 @@ func (g grpcClockwerkServer) Backup(ctx context.Context, empty *emptypb.Empty) (
 
 func NewClockwerkServer(endpoints ep.ClockwerkEndpoint) pb.ClockwerkServer {
 	return &grpcClockwerkServer{
+		getDummy: grpctransport.NewServer(
+			endpoints.GetDummyEndpoint,
+			decodeRequest,
+			encodeEmptyPbResponse,
+		),
+		postDummy: grpctransport.NewServer(
+			endpoints.PostDummyEndpoint,
+			decodeRequest,
+			encodeEmptyPbResponse,
+		),
+		deleteDummy: grpctransport.NewServer(
+			endpoints.DeleteDummyEndpoint,
+			decodeRequest,
+			encodeEmptyPbResponse,
+		),
+		putDummy: grpctransport.NewServer(
+			endpoints.PutDummyEndpoint,
+			decodeRequest,
+			encodeEmptyPbResponse,
+		),
+
 		getSchedulers: grpctransport.NewServer(
 			endpoints.GetSchedulersEndpoint,
 			decodeRequest,

@@ -7,6 +7,7 @@ import (
 	"github.com/nightsilvertech/clockwerk/gvar"
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/nightsilvertech/clockwerk/executors"
@@ -233,8 +234,38 @@ func (c clockwerk) Backup(ctx context.Context, empty *emptypb.Empty) (*emptypb.E
 		if err != nil {
 			return nil, err
 		}
+
+		log.Println("backed up", scheduler)
 	}
 	return nil, nil
+}
+
+func (c clockwerk) randomError() error {
+	if rand.Int()%2 == 0 {
+		return nil
+	} else {
+		return errors.New("random error for testing retry mechanism")
+	}
+}
+
+func (c clockwerk) GetDummy(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Println("get dummy endpoint executed")
+	return nil, c.randomError()
+}
+
+func (c clockwerk) PostDummy(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Println("post dummy endpoint executed")
+	return nil, c.randomError()
+}
+
+func (c clockwerk) DeleteDummy(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Println("delete dummy endpoint executed")
+	return nil, c.randomError()
+}
+
+func (c clockwerk) PutDummy(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Println("put dummy endpoint executed")
+	return nil, c.randomError()
 }
 
 func NewClockwerk(crn *cron.Cron, repo _interfacerepo.Storage) _interface.Clockwerk {

@@ -44,6 +44,11 @@ message SelectToggle {
 }
 
 service Clockwerk {
+  rpc GetDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc PostDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc DeleteDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc PutDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+
   rpc GetSchedulers(google.protobuf.Empty) returns (Schedulers);
   rpc AddScheduler(Scheduler) returns (Scheduler);
   rpc DeleteScheduler(SelectScheduler) returns (google.protobuf.Empty);
