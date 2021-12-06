@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	ep "github.com/nightsilvertech/clockwerk/endpoints"
@@ -26,6 +27,24 @@ import (
 
 var redisHost, redisPort, redisPass string
 var username, password, port string
+
+func CORS(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		headers := []string{"Content-Type", "Accept", "Authorization","Access-Control-Allow-Headers","X-Requested-With"}
+		methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE"}
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ","))
+		w.Header().Set("Access-Control-Allow-Methods", strings.Join(methods, ","))
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+		}
+
+		h.ServeHTTP(w, r)
+	})
+}
 
 func ServeGRPC(listener net.Listener, service pb.ClockwerkServer, serverOptions []grpc.ServerOption) error {
 	log.Println(fmt.Sprintf("grpc served at port %s", port))
@@ -46,7 +65,8 @@ func ServeHTTP(listener net.Listener, service pb.ClockwerkServer) error {
 	if err != nil {
 		return err
 	}
-	return http.Serve(listener, mux)
+	srv := &http.Server{Handler: CORS(mux)}
+	return srv.Serve(listener)
 }
 
 func MergeServer(service pb.ClockwerkServer, serverOptions []grpc.ServerOption) {
@@ -86,7 +106,7 @@ func PrepareCredential() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	port = os.Getenv("PORT")
+	port = "1929"
 	username = os.Getenv("SCHEDULER_USERNAME")
 	password = os.Getenv("SCHEDULER_PASSWORD")
 	if len(username) == 0 || len(password) == 0 {
