@@ -19,6 +19,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ClockwerkClient interface {
+	GetDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PostDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PutDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetSchedulers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Schedulers, error)
 	AddScheduler(ctx context.Context, in *Scheduler, opts ...grpc.CallOption) (*Scheduler, error)
 	DeleteScheduler(ctx context.Context, in *SelectScheduler, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -32,6 +36,42 @@ type clockwerkClient struct {
 
 func NewClockwerkClient(cc grpc.ClientConnInterface) ClockwerkClient {
 	return &clockwerkClient{cc}
+}
+
+func (c *clockwerkClient) GetDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/api.v1.Clockwerk/GetDummy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clockwerkClient) PostDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/api.v1.Clockwerk/PostDummy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clockwerkClient) DeleteDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/api.v1.Clockwerk/DeleteDummy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *clockwerkClient) PutDummy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/api.v1.Clockwerk/PutDummy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *clockwerkClient) GetSchedulers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Schedulers, error) {
@@ -83,6 +123,10 @@ func (c *clockwerkClient) Backup(ctx context.Context, in *emptypb.Empty, opts ..
 // All implementations should embed UnimplementedClockwerkServer
 // for forward compatibility
 type ClockwerkServer interface {
+	GetDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	PostDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	DeleteDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	PutDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	GetSchedulers(context.Context, *emptypb.Empty) (*Schedulers, error)
 	AddScheduler(context.Context, *Scheduler) (*Scheduler, error)
 	DeleteScheduler(context.Context, *SelectScheduler) (*emptypb.Empty, error)
@@ -94,6 +138,18 @@ type ClockwerkServer interface {
 type UnimplementedClockwerkServer struct {
 }
 
+func (UnimplementedClockwerkServer) GetDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDummy not implemented")
+}
+func (UnimplementedClockwerkServer) PostDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostDummy not implemented")
+}
+func (UnimplementedClockwerkServer) DeleteDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDummy not implemented")
+}
+func (UnimplementedClockwerkServer) PutDummy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutDummy not implemented")
+}
 func (UnimplementedClockwerkServer) GetSchedulers(context.Context, *emptypb.Empty) (*Schedulers, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSchedulers not implemented")
 }
@@ -119,6 +175,78 @@ type UnsafeClockwerkServer interface {
 
 func RegisterClockwerkServer(s grpc.ServiceRegistrar, srv ClockwerkServer) {
 	s.RegisterService(&Clockwerk_ServiceDesc, srv)
+}
+
+func _Clockwerk_GetDummy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClockwerkServer).GetDummy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.Clockwerk/GetDummy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClockwerkServer).GetDummy(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Clockwerk_PostDummy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClockwerkServer).PostDummy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.Clockwerk/PostDummy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClockwerkServer).PostDummy(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Clockwerk_DeleteDummy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClockwerkServer).DeleteDummy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.Clockwerk/DeleteDummy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClockwerkServer).DeleteDummy(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Clockwerk_PutDummy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClockwerkServer).PutDummy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.v1.Clockwerk/PutDummy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClockwerkServer).PutDummy(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Clockwerk_GetSchedulers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -218,6 +346,22 @@ var Clockwerk_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.v1.Clockwerk",
 	HandlerType: (*ClockwerkServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetDummy",
+			Handler:    _Clockwerk_GetDummy_Handler,
+		},
+		{
+			MethodName: "PostDummy",
+			Handler:    _Clockwerk_PostDummy_Handler,
+		},
+		{
+			MethodName: "DeleteDummy",
+			Handler:    _Clockwerk_DeleteDummy_Handler,
+		},
+		{
+			MethodName: "PutDummy",
+			Handler:    _Clockwerk_PutDummy_Handler,
+		},
 		{
 			MethodName: "GetSchedulers",
 			Handler:    _Clockwerk_GetSchedulers_Handler,

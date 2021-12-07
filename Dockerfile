@@ -1,3 +1,4 @@
+# Build clockwerk scheduler engine
 FROM golang:alpine AS builder
 
 RUN apk --no-cache add git mercurial
@@ -39,7 +40,6 @@ FROM scratch
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /dist/clockwerk /
-ENV TZ=Asia/Jakarta
 
 # Command to run
 ENTRYPOINT ["/clockwerk"]

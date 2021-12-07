@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"strings"
@@ -31,15 +32,22 @@ func BasicAuthMiddleware() endpoint.Middleware {
 			if data = strings.Split(basicAuth[1], ":"); len(basicAuth) != 2 {
 				return nil, errors.New("authentication required")
 			}
-			username = data[0]
-			password = data[1]
+			decoded, err := base64.StdEncoding.DecodeString(data[0])
+			if err != nil {
+				username = data[0]
+				password = data[1]
+			} else {
+				decodedDataSplit := strings.Split(string(decoded), ":")
+				username = decodedDataSplit[0]
+				password = decodedDataSplit[1]
+			}
 
 			key := fmt.Sprintf("%s_%s", gvar.HashKeyMap, username)
 			hashedPassword, ok := gvar.SyncMapHashStorage.Load(key)
 			if !ok {
 				return nil, errors.New("username not found")
 			}
-			err := bcrypt.CompareHashAndPassword([]byte(hashedPassword.(string)), []byte(password))
+			err = bcrypt.CompareHashAndPassword([]byte(hashedPassword.(string)), []byte(password))
 			if err != nil {
 				return nil, err
 			}

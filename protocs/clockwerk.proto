@@ -6,19 +6,22 @@ option go_package = "github.com/nightsilvertech/clockwerk/protocs/api/v1/api/v1"
 message Scheduler {
   string id = 1;
   int32 entry_id = 2;
-  string name = 3;
-  string executor = 4;
-  string command = 5;
-  string url = 6;
-  string method = 7;
-  string body = 8;
-  repeated string headers = 9;
-  string spec = 10;
-  bool disabled = 11;
-  bool persist = 12;
-  int64 created_at = 13;
-  string username = 14;
-  string password = 15;
+  string reference_id = 3;
+  string name = 4;
+  string executor = 5;
+  string command = 6;
+  string url = 7;
+  string method = 8;
+  string body = 9;
+  int32 retry = 10;
+  int32 retry_threshold = 11;
+  repeated string headers = 12;
+  string spec = 13;
+  bool disabled = 14;
+  bool persist = 15;
+  int64 created_at = 16;
+  string username = 17;
+  string password = 18;
 }
 
 message Schedulers {
@@ -27,20 +30,25 @@ message Schedulers {
 
 message SelectScheduler {
   string id = 1;
-  int32 entry_id = 2;
+  string reference_id = 2;
   string username = 3;
   string password = 4;
 }
 
 message SelectToggle {
   string id = 1;
-  int32 entry_id = 2;
+  string reference_id = 2;
   bool disabled = 3;
   string username = 4;
   string password = 5;
 }
 
 service Clockwerk {
+  rpc GetDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc PostDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc DeleteDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc PutDummy(google.protobuf.Empty) returns (google.protobuf.Empty);
+
   rpc GetSchedulers(google.protobuf.Empty) returns (Schedulers);
   rpc AddScheduler(Scheduler) returns (Scheduler);
   rpc DeleteScheduler(SelectScheduler) returns (google.protobuf.Empty);
