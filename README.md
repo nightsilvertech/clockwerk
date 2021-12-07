@@ -8,7 +8,7 @@
   <img alt="maintained: yes" src="https://img.shields.io/badge/Maintained-Yes-green.svg" />
 </p>
 
-> A distributed cron service with API for doing http job, and the dashboard is still on development
+> A distributed cron service with API for execute HTTP request, with simple lovely dashboard
 
 ----
 
@@ -22,7 +22,12 @@ docker run -d --name clockwerk -p 1929:1929 -e SCHEDULER_USERNAME=clockwerk -e S
 
 Below is only needed if you don't have redis database running, here is for spinning up redis database with docker
 ```bash
-docker run --name redis-clockwerk -p 6379:6379 -d redis redis-server --save 60 1 --loglevel warning --requirepass redis123
+docker run -d --name redis-clockwerk -p 6379:6379 redis redis-server --save 60 1 --loglevel warning --requirepass redis123
+```
+
+Below for spinning up the simple web dashboard for manage the scheduler (please change the env parameter because this is just example)
+```bash
+docker run -d --name clockwerk-ui -p 1930:1930 -e REACT_APP_SCHEDULER_HOST=localhost -e REACT_APP_SCHEDULER_PORT=1929 -e REACT_APP_SCHEDULER_USERNAME=clockwerk -e REACT_APP_SCHEDULER_PASSWORD=123 nightsilvertech/clockwerk-ui:1.0.0
 ```
 
 ## Usage

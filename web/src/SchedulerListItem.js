@@ -56,6 +56,8 @@ export default function SchedulerListItem(props) {
     require('dotenv').config()
     let username = process.env.REACT_APP_SCHEDULER_USERNAME
     let password = process.env.REACT_APP_SCHEDULER_PASSWORD
+    let host = process.env.REACT_APP_SCHEDULER_HOST
+    let port = process.env.REACT_APP_SCHEDULER_PORT
 
     let req = {
       'id': props.scheduler.id,
@@ -64,7 +66,7 @@ export default function SchedulerListItem(props) {
       'password': password
     }
     axios({
-      baseURL: `http://localhost:1929/v1/scheduler/${props.scheduler.id}`,
+      baseURL: `http://${host}:${port}/v1/scheduler/${props.scheduler.id}`,
       headers: {
         'Content-Type': "application/json",
       },
@@ -78,10 +80,11 @@ export default function SchedulerListItem(props) {
   }
 
   function switchScheduler(){
-    console.log(disabled)
     require('dotenv').config()
     let username = process.env.REACT_APP_SCHEDULER_USERNAME
     let password = process.env.REACT_APP_SCHEDULER_PASSWORD
+    let host = process.env.REACT_APP_SCHEDULER_HOST
+    let port = process.env.REACT_APP_SCHEDULER_PORT
 
     let req = {
       'id': props.scheduler.id,
@@ -91,14 +94,13 @@ export default function SchedulerListItem(props) {
       'password': password
     }
     axios({
-      baseURL: `http://localhost:1929/v1/scheduler/toggle/${props.scheduler.id}`,
+      baseURL: `http://${host}:${port}/v1/scheduler/toggle/${props.scheduler.id}`,
       headers: {
         'Content-Type': "application/json",
       },
       method: 'post',
       data: req
     }).then((response) => {
-      console.log(response.data)
       handleClickCloseDialog()
     }).then((error) => {
       handleClickCloseDialog()

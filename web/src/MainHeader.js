@@ -101,6 +101,8 @@ export default function MainHeader() {
     require('dotenv').config()
     let username = process.env.REACT_APP_SCHEDULER_USERNAME
     let password = process.env.REACT_APP_SCHEDULER_PASSWORD
+    let host = process.env.REACT_APP_SCHEDULER_HOST
+    let port = process.env.REACT_APP_SCHEDULER_PORT
 
     if (name == "" || url == "" || method == "" || retry == "" || retryThreshold == "" || cronSpec == "") {
       alert("Please fill the form")
@@ -122,7 +124,7 @@ export default function MainHeader() {
         'password': password
       }
       axios({
-        baseURL: 'http://localhost:1929/v1/scheduler',
+        baseURL: `http://${host}:${port}/v1/scheduler`,
         headers: {
           'Content-Type': "application/json",
         },
