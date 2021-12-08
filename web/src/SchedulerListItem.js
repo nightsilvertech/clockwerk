@@ -186,10 +186,10 @@ export default function SchedulerListItem(props) {
               SPEC : {props.scheduler.spec}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              DISABLED : {props.scheduler.disabled == null ? "ON" : "OFF"}
+              ACTIVE : {props.scheduler.disabled == true ? "NO" : "YES"}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              PERSISTED : {props.scheduler.persist == null ? "NO" : "YES"}
+              PERSISTED : {props.scheduler.persist == true ? "YES" : "NO"}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               URL : {props.scheduler.url}
